@@ -7,7 +7,7 @@ const router = express.Router();
 router
   .route('/')
   .post(auth(), (req, res) => {
-    emailService.sendEmail('kharazian@canadaroyalmilk.com', 'test', 'Please see the attached calendar invite.');
+    emailService.sendAppointment(req.body);
     res.send('Create a user');
   });
 

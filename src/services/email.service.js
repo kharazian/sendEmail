@@ -55,9 +55,24 @@ If you did not create an account, then ignore this email.`;
   await sendEmail(to, subject, text);
 };
 
+const sendAppointment = async (appointmentBody) => {
+  const msg = {
+    from: 'it@canadaroyalmilk.com',
+    to: appointmentBody.to,
+    subject: appointmentBody.subject,
+    text: appointmentBody.text,
+    attachments: {
+      raw: appointmentBody.icsText
+    },
+  };
+  
+  await transport.sendMail(msg);
+}
+
 module.exports = {
   transport,
   sendEmail,
   sendResetPasswordEmail,
   sendVerificationEmail,
+  sendAppointment,
 };
