@@ -2,14 +2,31 @@ const nodemailer = require('nodemailer');
 const config = require('../config/config');
 const logger = require('../config/logger');
 
+function decodeEntities(encodedString) {
+  var translate_re = /&(nbsp|amp|quot|lt|gt);/g;
+  var translate = {
+      "nbsp":" ",
+      "amp" : "&",
+      "quot": "\"",
+      "lt"  : "<",
+      "gt"  : ">"
+  };
+  return encodedString.replace(translate_re, function(match, entity) {
+      return translate[entity];
+  }).replace(/&#(\d+);/gi, function(match, numStr) {
+      var num = parseInt(numStr, 10);
+      return String.fromCharCode(num);
+  });
+}
+
 const transport = nodemailer.createTransport(config.email.smtp);
 /* istanbul ignore next */
-if (config.env !== 'test') {
-  transport
-    .verify()
-    .then(() => logger.info('Connected to email server'))
-    .catch(() => logger.warn('Unable to connect to email server. Make sure you have configured the SMTP options in .env'));
-}
+// if (config.env !== 'test') {
+//   transport
+//     .verify()
+//     .then(() => logger.info('Connected to email server'))
+//     .catch(() => logger.warn('Unable to connect to email server. Make sure you have configured the SMTP options in .env'));
+// }
 
 /**
  * Send an email
@@ -56,17 +73,26 @@ If you did not create an account, then ignore this email.`;
 };
 
 const sendAppointment = async (appointmentBody) => {
-  const msg = {
+
+  const mailOptions = {
     from: 'it@canadaroyalmilk.com',
     to: appointmentBody.to,
     subject: appointmentBody.subject,
-    text: appointmentBody.text,
-    attachments: {
-      raw: appointmentBody.icsText
+    html: decodeEntities(appointmentBody.html),
+    icalEvent: {
+      filename: 'invitation.ics',
+      method: 'REQUEST',
+      content: appointmentBody.icsText,
     },
   };
-  
-  await transport.sendMail(msg);
+
+  nodemailer.createTransport(config.email.smtp).sendMail(mailOptions, (error, info) => {
+    if (error) {
+      console.error(error);
+    } else {
+      console.log('Email sent: ' + info.response);
+    }
+  });
 }
 
 module.exports = {
