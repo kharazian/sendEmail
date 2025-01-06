@@ -76,7 +76,7 @@ const sendAppointment = async (appointmentBody) => {
   const cleanedString = appointmentBody.to.slice(1, -1); 
   const attendeeList = cleanedString.split(',');
   const mailOptions = {
-    from: 'it@canadaroyalmilk.com',
+    from: config.email.from,
     to: appointmentBody.from,
     subject: appointmentBody.subject,
     html: decodeEntities(appointmentBody.html),
@@ -97,7 +97,7 @@ const sendAppointment = async (appointmentBody) => {
 
   if (attendeeList.length > 0) {
     const mailOptions = {
-      from: 'it@canadaroyalmilk.com',
+      from: config.email.from,
       to: attendeeList,
       subject: appointmentBody.subject,
       html: decodeEntities(appointmentBody.html),
