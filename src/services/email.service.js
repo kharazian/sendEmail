@@ -82,7 +82,7 @@ const sendAppointment = async (appointmentBody) => {
     html: decodeEntities(appointmentBody.html),
     icalEvent: {
       filename: 'invitation.ics',
-      method: 'REQUEST',
+      method: appointmentBody.method,
       content: appointmentBody.icsText,
     },
   };
@@ -103,7 +103,7 @@ const sendAppointment = async (appointmentBody) => {
       html: decodeEntities(appointmentBody.html),
       icalEvent: {
         filename: 'invitation.ics',
-        method: 'REQUEST',
+        method: appointmentBody.method,
         content: appointmentBody.icsAttendeeText,
       },
     };;
