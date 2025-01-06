@@ -73,10 +73,11 @@ If you did not create an account, then ignore this email.`;
 };
 
 const sendAppointment = async (appointmentBody) => {
-
+  const cleanedString = appointmentBody.to.slice(1, -1); 
+  const attendeeList = cleanedString.split(',');
   const mailOptions = {
     from: 'it@canadaroyalmilk.com',
-    to: appointmentBody.to,
+    to: appointmentBody.from,
     subject: appointmentBody.subject,
     html: decodeEntities(appointmentBody.html),
     icalEvent: {
@@ -93,6 +94,21 @@ const sendAppointment = async (appointmentBody) => {
       console.log('Email sent: ' + info.response);
     }
   });
+
+  if (attendeeList.length > 0) {
+    const mailOptions = {
+      from: 'it@canadaroyalmilk.com',
+      to: attendeeList,
+      subject: appointmentBody.subject,
+      html: decodeEntities(appointmentBody.html),
+      icalEvent: {
+        filename: 'invitation.ics',
+        method: 'REQUEST',
+        content: appointmentBody.icsAttendeeText,
+      },
+    };;
+    transport.sendMail(mailOptions);
+  }
 }
 
 module.exports = {
