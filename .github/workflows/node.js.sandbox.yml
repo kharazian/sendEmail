@@ -21,10 +21,11 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+      with:
+        path: master
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v4
       with:
-        path: master
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
     - run: npm ci
