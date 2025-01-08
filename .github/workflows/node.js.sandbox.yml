@@ -28,6 +28,6 @@ jobs:
         cache: 'npm'
     - run: npm ci
     - run: |
-        touch .env
-        echo "${{ secrets.SANDBOX_ENV_FILE }}" > .env 
+        touch sandbox/.env
+        echo "${{ secrets.SANDBOX_ENV_FILE }}" > sandbox/.env 
     - run: pm2 restart sandbox
