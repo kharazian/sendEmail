@@ -85,13 +85,7 @@ const sendAppointment = async (appointmentBody) => {
     },
   };
 
-  transport.sendMail(mailOptions, (error, info) => {
-    if (error) {
-      console.error(error);
-    } else {
-      console.log('Email sent: ' + info.response);
-    }
-  });
+  await transport.sendMail(mailOptions);
 
   if (appointmentBody.to?.length > 0) {
     const mailOptions = {
@@ -105,7 +99,7 @@ const sendAppointment = async (appointmentBody) => {
         content: appointmentBody.icsAttendeeText,
       },
     };;
-    transport.sendMail(mailOptions);
+    await transport.sendMail(mailOptions);
   }
 }
 
