@@ -87,7 +87,8 @@ const sendAppointment = async (appointmentBody) => {
 
   await transport.sendMail(mailOptions);
 
-  if (appointmentBody.to?.length > 0) {
+  const attendeeList = appointmentBody.to?.filter((attendee) => attendee !== appointmentBody.from);
+  if (attendeeList?.length > 0) {
     const mailOptions = {
       from: config.email.from,
       to: attendeeList,
